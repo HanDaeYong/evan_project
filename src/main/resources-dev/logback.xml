@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration scan="true" scanPeriod="60 seconds" debug="true">
+
+	<property name="LOG_HOME" value="/app/tomcat/logs" />
+	
+	<appender name="trafic" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    	<file>${LOG_HOME}/trafic/batch/trafic_batch.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- daily rollover -->
+            <fileNamePattern>${LOG_HOME}/trafic/batch/trafic_batch.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <!-- keep 30 days' worth of history -->
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+<!-- 
+	<appender name="esc" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    	<file>${LOG_HOME}/esc/esc.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            daily rollover
+            <fileNamePattern>${LOG_HOME}/esc/esc.%d{yyyy-MM-dd}.log</fileNamePattern>
+            keep 30 days' worth of history
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+	<appender name="ocb" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    	<file>${LOG_HOME}/ocb/ocb.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            daily rollover
+            <fileNamePattern>${LOG_HOME}/ocb/ocb.%d{yyyy-MM-dd}.log</fileNamePattern>
+            keep 30 days' worth of history
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+   -->  
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <!-- encoders are assigned the type
+             ch.qos.logback.classic.encoder.PatternLayoutEncoder by default -->
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+    
+    <logger name="sonegy.slf4j.sample" level="INFO"></logger>
+    <logger name="org.springframework.context" level="info"></logger>
+
+	<root level="info" />
+    
+	<!-- <root level="debug">
+        <appender-ref ref="STDOUT" />
+    </root> -->
+    
+    <!-- Application Loggers -->
+    <logger name="trafic" additivity="false">
+		<level value="debug" />
+		<appender-ref ref="trafic" />
+		<appender-ref ref="STDOUT" level="debug"/>
+	</logger>
+	<!-- 
+	<logger name="esc" additivity="false">
+		<level value="debug" />
+		<appender-ref ref="esc" />
+		<appender-ref ref="ubi" level="debug"/>
+		<appender-ref ref="STDOUT" level="debug"/>
+	</logger>
+	
+	<logger name="ocb" additivity="false">
+		<level value="debug" />
+		<appender-ref ref="ocb" />
+		<appender-ref ref="ubi" level="debug"/>
+		<appender-ref ref="STDOUT" level="debug"/>
+	</logger>
+	 -->
+</configuration>

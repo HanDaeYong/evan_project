@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans  xmlns="http://www.springframework.org/schema/beans"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+		xmlns:context="http://www.springframework.org/schema/context"
+		xmlns:util="http://www.springframework.org/schema/util"
+		xmlns:p="http://www.springframework.org/schema/p"
+		xmlns:tx="http://www.springframework.org/schema/tx"
+		xsi:schemaLocation="http://www.springframework.org/schema/beans 
+					        http://www.springframework.org/schema/beans/spring-beans.xsd
+					        http://www.springframework.org/schema/context 
+					        http://www.springframework.org/schema/context/spring-context-3.1.xsd
+					        http://www.springframework.org/schema/util 
+					        http://www.springframework.org/schema/util/spring-util-3.2.xsd
+					        http://www.springframework.org/schema/tx
+					        http://www.springframework.org/schema/tx/spring-tx-3.0.xsd">
+
+	<!-- for java properties -->
+	<util:properties id="system" location="classpath:system.properties"/>
+	<util:properties id="crypto" location="classpath:crypto.properties"/>
+	<util:properties id="db" location="classpath:db.properties"/>
+	<util:properties id="smtp" location="classpath:smtp.properties"/>
+	
+	<!-- Uncomment and add your base-package here: <context:component-scan base-package="org.springframework.samples.service"/> -->
+	
+	<!-- 트랜잭션매니저 설정 -->
+	<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="ds-one" />
+	</bean>
+	<tx:annotation-driven proxy-target-class="true"/>
+	<tx:annotation-driven transaction-manager="transactionManager" />
+	<!--// 트랜잭션매니저 설정 -->
+	
+	<bean id="ds-one" class="org.apache.commons.dbcp.BasicDataSource">
+		<property name="driverClassName" value="#{db['jdbc.driverClassName']}" />
+    	<property name="url" value="#{db['jdbc.url']}" />
+    	<property name="username" value="#{db['jdbc.username']}" />
+    	<property name="password" value="#{db['jdbc.password']}" />
+    	<property name="initialSize" value="#{db['jdbc.poolInitialSize']}" />
+		<property name="maxIdle" value="#{db['jdbc.poolMaxIdle']}" />
+		<property name="maxActive" value="#{db['jdbc.poolMaxActive']}" />
+		<property name="validationQuery">
+			<value>SELECT 1</value>
+		</property>
+		<property name="testOnBorrow">
+			<value>true</value>
+		</property>
+    </bean>
+	
+	<bean id="dsOneSqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean"
+        p:mapperLocations="classpath:mapper/**/*.xml"
+        p:dataSource-ref="ds-one" />
+    <bean id="dsOneScanner" class="org.mybatis.spring.mapper.MapperScannerConfigurer"
+        p:basePackage="kr.co.skmns.trafic.scheduler.dao"
+        p:sqlSessionFactoryBeanName="dsOneSqlSessionFactory" />
+        
+    <bean id="restTemplate" class="org.springframework.web.client.RestTemplate">
+  		<constructor-arg>
+        	<bean class="org.springframework.http.client.HttpComponentsClientHttpRequestFactory"
+            	p:readTimeout="5000"
+           		p:connectTimeout="5000" />
+    	</constructor-arg>
+  	</bean>
+	
+</beans>
