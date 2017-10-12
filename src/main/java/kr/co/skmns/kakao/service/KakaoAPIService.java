@@ -33,15 +33,35 @@ public class KakaoAPIService {
 	public JSONObject keyboard() {		
 		//JSON 객체 생성
         JSONObject jsObj = new JSONObject();
-        JSONArray jsArr = new JSONArray();
+        jsObj.put("type", "text");
         
+        //JSONArray jsArr = new JSONArray();        
         //버튼에 들어갈 텍스트
-        jsArr.add("say hello");
-        jsArr.add("say bye");        
+        //jsArr.add("say hello");
+        //jsArr.add("say bye");        
         
-        //home keyboard 설정
-        jsObj.put("type", "buttons");
-        jsObj.put("buttons", jsArr);
+        //home keyboard 설정        
+        //jsObj.put("type", "buttons");
+        //jsObj.put("buttons", jsArr);
         return jsObj;
+	}
+	
+	public JSONObject message(JSONObject resObj) {		
+		//JSON 객체 생성
+        JSONObject textObj = new JSONObject();        
+        JSONObject sendObj = new JSONObject();
+                
+        String content = (String) resObj.get("content");
+        
+        //구현
+        if (!content.isEmpty()) {
+        	textObj.put("text", content);
+        } else {
+        	textObj.put("text", "잘 몰알아듣겠습니다. :(");
+        }
+        
+        sendObj.put("message", textObj);
+        
+        return sendObj;
 	}
 }
